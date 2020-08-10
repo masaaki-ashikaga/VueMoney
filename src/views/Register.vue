@@ -36,9 +36,7 @@ export default {
                     password: this.password,
                     returnSecureToken: true,
                 }
-            ).then(response => {
-                console.log(response)
-            });
+            );
         }
     }
 }
