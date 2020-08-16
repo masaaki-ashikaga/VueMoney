@@ -17,8 +17,6 @@
 
 
 <script>
-import axios from '../axios-auth';
-
 export default {
     data() {
         return {
@@ -29,14 +27,10 @@ export default {
     },
     methods: {
         register() {
-            axios.post(
-                '/accounts:signUp?key=AIzaSyA8v-UzUiYBpWMr7jFiFFPWisIV203O3rA',
-                {
-                    email: this.email,
-                    password: this.password,
-                    returnSecureToken: true,
-                }
-            );
+            this.$store.dispatch('register', {
+                email: this.email,
+                password: this.password,
+            });
         }
     }
 }
