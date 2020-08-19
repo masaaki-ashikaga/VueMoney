@@ -17,6 +17,9 @@
 
 
 <script>
+import firebase from 'firebase';
+import router from '../router';
+
 export default {
     data() {
         return {
@@ -27,9 +30,9 @@ export default {
     },
     methods: {
         register() {
-            this.$store.dispatch('register', {
-                email: this.email,
-                password: this.password,
+            firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+            .then(() => {
+                router.push('/dashboard');
             });
         }
     }

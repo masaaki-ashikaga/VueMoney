@@ -4,49 +4,57 @@ import Router from 'vue-router';
 import Login from './views/Login.vue';
 import Register from './views/Register.vue';
 import Dashboard from './views/Dashboard.vue';
-import store from './store';
+import firebase from 'firebase';
+
+import 'bootstrap/dist/css/bootstrap.css';
+import 'bootstrap-vue/dist/bootstrap-vue.css';
+import VueRouter from 'vue-router';
 
 Vue.use(Router);
 Vue.use(BootstrapVue);
 
-import 'bootstrap/dist/css/bootstrap.css';
-import 'bootstrap-vue/dist/bootstrap-vue.css';
+Vue.use(VueRouter);
 
-export default new Router({
-    mode: 'history',
-    routes: [
-        {
-            path: '/login',
-            component: Login,
-            beforeEnter(to, from, next){
-                if(store.getters.idToken) {
-                    next();
-                } else {
-                    next();
-                }
-            }
-        },
-        {
-            path: '/register',
-            component: Register,
-            beforeEnter(to, from, next){
-                if(store.getters.idToken) {
-                    next();
-                } else {
-                    next();
-                }
-            }
-        },
-        {
-            path: '/dashboard',
-            component: Dashboard,
-            beforeEnter(to, from, next){
-                if(store.getters.idToken) {
-                    next();
-                } else {
-                    next('/login');
-                }
-            }
-        },
-    ]
+const routes = [
+  {
+    path: "/register",
+    name: "register",
+    component: Register
+  },
+  {
+    path: "/login",
+    name: "login",
+    component: Login
+  },
+  {
+    path: "/dashboard",
+    name: "dashboard",
+    component: Dashboard,
+    meta: {requiresAuth: true}
+  }
+];
+
+const router = new VueRouter({
+  mode: "history",
+  base: process.env.BASE_URL,
+  routes
 });
+
+router.beforeEach((to, from, next) => {
+    const requiresAuth = to.matched.some(recode => recode.meta.requiresAuth)
+    if(requiresAuth){
+        firebase.auth().onAuthStateChanged(function (user) {
+            if (user) {
+                next()
+            } else {
+                next({
+                    path: '/login'
+                })
+            }
+        })
+    } else {
+        next()
+    }
+});
+
+export default router;
