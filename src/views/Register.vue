@@ -17,7 +17,8 @@
 
 
 <script>
-import axios from '../axios-auth';
+import firebase from 'firebase';
+import router from '../router';
 
 export default {
     data() {
@@ -29,14 +30,10 @@ export default {
     },
     methods: {
         register() {
-            axios.post(
-                '/accounts:signUp?key=AIzaSyA8v-UzUiYBpWMr7jFiFFPWisIV203O3rA',
-                {
-                    email: this.email,
-                    password: this.password,
-                    returnSecureToken: true,
-                }
-            );
+            firebase.auth().createUserWithEmailAndPassword(this.email, this.password)
+            .then(() => {
+                router.push('/dashboard');
+            });
         }
     }
 }

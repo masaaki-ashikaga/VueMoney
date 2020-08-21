@@ -1,20 +1,21 @@
 <template>
   <div id="app">
     <h1>ログイン画面</h1>
-    <form>
-        <label for="email">メールアドレス</label>
-        <input type="email" id="email" placeholder="E-mail" v-model="email">
-        <br>
-        <label for="password">パスワード</label>
-        <input type="password" id="password" placeholder="Password" v-model="password">
-        <br>
-        <input type="submit" class="btn btn-primary" value="ログイン" @click="login">
-    </form>
+    <label for="email">メールアドレス</label>
+    <input type="email" id="email" placeholder="E-mail" v-model="email">
+    <br>
+    <label for="password">パスワード</label>
+    <input type="password" id="password" placeholder="Password" v-model="password">
+    <br>
+    <button class="btn btn-primary" @click="login">ログイン</button>
     <p class="mt-2"><router-link to="/register">新規登録はこちらから</router-link></p>
   </div>
 </template>
 
 <script>
+import firebase from 'firebase';
+import router from '../router';
+
 export default {
     data(){
         return {
@@ -24,8 +25,11 @@ export default {
     },
     methods: {
         login(){
-            
+            firebase.auth().signInWithEmailAndPassword(this.email, this.password)
+            .then(() => {
+                router.push('/dashboard');
+            });
         }
-    },
+    }
 }
 </script>
